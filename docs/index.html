@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+  </head>
+  <body>
+    <img src="onnx.svg" />
+    <script>
+      async function main() {
+        const img = document.querySelector('img');
+        let T = await ort.Tensor.fromImage(img);
+        console.log(T.data);
+      }
+      main();
+    </script>
+  </body>
+</html>
