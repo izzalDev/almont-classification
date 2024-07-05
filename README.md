@@ -1,6 +1,6 @@
-# 🤖 Klasifikasi dan Objek Deteksi
+# 🤖 Klasifikasi CAE-SVM
 
-Proyek ini menunjukkan bagaimana cara klasifikasi menggunakan `scikit-learn` dan object recognition dengan `opencv`.
+Proyek ini menunjukkan bagaimana cara klasifikasi menggunakan `scikit-learn` dan `pytorch`.
 
 ## Instalasi
 

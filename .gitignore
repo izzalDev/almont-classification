@@ -1,2 +1,4 @@
 /models
 /sessions
+/lightning_logs
+/checkpoints
