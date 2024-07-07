@@ -1,6 +1,6 @@
 # 🤖 Klasifikasi CAE-SVM
 
-Proyek ini menunjukkan bagaimana cara klasifikasi menggunakan `scikit-learn` dan `pytorch`.
+Proyek ini menunjukkan bagaimana cara klasifikasi menggunakan `scikit-learn` dan `pytorch` dengan mengkombinasikan Convolutional Autoencoder dan Support Vector Classifier pada image. Contoh implementasi di [link ini](https://izzalDev.github.io/almont-classification).
 
 ## Instalasi
 
