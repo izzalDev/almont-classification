@@ -1,16 +1,100 @@
-<html>
-  <head>
-    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
-  </head>
-  <body>
-    <img src="onnx.svg" />
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almond Classification CAE-SVM</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://docs.opencv.org/4.7.0/opencv.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jimp@0.22.12/browser/lib/jimp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@latest/dist/ort.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./imageHelper.js"></script>
+    <style>
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #6ae792;
+            animation: spin 1s linear infinite;
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-8">
+    <div class="max-w-lg mx-auto bg-white rounded overflow-hidden shadow-lg mb-8">
+        <img id="previewImage" class="w-full h-full object-cover object-center" src="https://via.placeholder.com/500x300" alt="Sample Image">
+        <div class="p-6">
+            <div class="flex justify-between items-center">
+                <label for="fileInput" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">Pilih File</label>
+                <input id="fileInput" type="file" class="hidden">
+                <button id="predictBtn" class="flex bg-green-300 px-4 py-2 rounded-md cursor-not-allowed text-white" disabled>
+                    <div id="spinner" class="mr-2">
+                        <div class="spinner"></div>
+                    </div>
+                    Loading Model
+                </button>
+            </div>
+            <div id="predictionResult" class="mt-4 text-center text-xl"></div>
+            <a href="https://github.com/ymyurdakul/datasets/raw/main/almond/archive.zip" class="text-blue-500 text-left">Download Dataset</a>
+        </div>
+    </div>
     <script>
-      async function main() {
-        const img = document.querySelector('img');
-        let T = await ort.Tensor.fromImage(img);
-        console.log(T.data);
-      }
-      main();
+        $(document).ready(function () {
+            var imageUrl = '';
+            $('#fileInput').change(function () {
+                $('#predictBtn').prop('disabled', false);
+                previewImage(this);
+                $('#predictionResult').html('');
+                imageUrl = URL.createObjectURL(this.files[0]);
+            });
+
+            $('#predictBtn').click(function () {
+                $(this).prop('disabled', true);
+                $('#spinner').removeClass('hidden');
+                setTimeout(function () {
+                    $('#spinner').addClass('hidden');
+                    $('#predictBtn').prop('disabled', false);
+                }, 3000); // Adjust this time according to your model loading time
+            });
+
+            function previewImage(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#previewImage').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            const class_names = {0: "AK", 1: "KAPADOKYA", 2: "NURLU", 3: "SIRA"};
+            const session = ort.InferenceSession.create('./cae_svm.onnx').then(session => {
+                $('#spinner').addClass('hidden');
+                $('#predictBtn').prop('disabled', false);
+                $('#predictBtn').removeClass('cursor-not-allowed');
+                $('#predictBtn').removeClass('bg-green-300');
+                $('#predictBtn').addClass('bg-green-500');
+                $('#predictBtn').text('Predict');
+                $('#predictBtn').click(async() => {
+                    const inputTensor = await getImageTensorFromPath(imageUrl);
+                    const {label, probabilities} = await session.run({input: inputTensor});
+                    $('#predictionResult').html(`${class_names[label.data]} ${Math.max(...probabilities.data)*100}%</p>`);
+                });
+            });
+        });
     </script>
-  </body>
+</body>
+
 </html>
