@@ -1,8 +1,5 @@
-/models
-/sessions
-/lightning_logs
-/checkpoints# Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux,python
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,python
+# Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos,python
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,python
 
 ### Linux ###
 *~
@@ -249,4 +246,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,python
+# End of https://www.toptal.com/developers/gitignore/api/linux,windows,macos,python
+
+models/
